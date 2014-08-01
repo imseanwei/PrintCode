@@ -1,8 +1,8 @@
 from mecode import G
 g = G(
         outfile = "/Users/SeanWei/Documents/Python/PrintCode/Spiralcell.txt",
-        header = "/Users/SeanWei/Documents/Python/mecode/mecode/header-Mach3.rtf",
-        footer = "/Users/SeanWei/Documents/Python/mecode/mecode/footer-Mach3.rtf",
+        header = "/Users/SeanWei/Documents/Python/mecode/mecode/header-mach3.txt",
+        footer = "/Users/SeanWei/Documents/Python/mecode/mecode/footer-mach3.txt",
         aerotech_include = False,
         direct_write = False,
         print_lines = True, 
