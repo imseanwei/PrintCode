@@ -15,8 +15,9 @@ layers = 9    #layers
 COM = 5		#air-line  
 pressure= 60	#air-pressure,psi  
 leadinx = 3 	#leadinx; mm  
-out_wall = 1			#outer-wall-side-length; mm  
+out_wall = 3			#outer-wall-side-length; mm  
 gap = 0.05 	#middle-wall-side-length; mm  
+trace = tipsize
 
 def set_pressure(COM, pressure):
     g.write('M9000 P{} Q{}'.format(COM, pressure))
@@ -30,7 +31,18 @@ def set_apply_pressure(COM, pressure):
 def shut_off_pressure():
     g.write('M10000')
 
-
+def spiral(out_wall, gap, trace):
+      length = out_wall-tipsize
+      length_limit = 3*trace
+      #starts from upper left
+      g.move(x=length)
+      while length > length_limit:
+          length = length-trace-gap
+          g.move(y=-length)
+          g.move(x=-length)
+          length = length-trace-gap
+          g.move(y=length)
+          g.move(x=length)
 
 #Code starts
 g.set_home(x=0,y=0,Z=0)
@@ -46,6 +58,8 @@ g.dwell(1)
 #----Lead in--go----  
 g.move(x=leadinx)
 
+spiral(out_wall, gap, trace)
+
 shut_off_pressure()
 
 g.dwell(5)
@@ -53,6 +67,6 @@ g.dwell(5)
 g.move(Z=3)
 
 #To end
-#g.view(backend='matplotlib')
+g.view(backend='matplotlib')
 #g.view()
 g.teardown()
