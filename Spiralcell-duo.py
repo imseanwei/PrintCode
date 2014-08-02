@@ -39,10 +39,10 @@ def spiral(out_wall, gap, trace):
       #starts from upper left
       g.move(x=length)
       while length >= length_limit:
-          length = length-trace-gap
+          length = length-trace-2*gap
           g.move(y=-length)
           g.move(x=-length)
-          length = length-trace-gap
+          length = length-trace-2*gap
           g.move(y=length)
           g.move(x=length)
 
@@ -52,10 +52,10 @@ def spiral_reverse(out_wall, gap, trace):
       #starts from bottom right
       g.move(x=-length)
       while length >= length_limit:
-          length = length-trace-gap
+          length = length-trace-2*gap
           g.move(y=length)
           g.move(x=length)
-          length = length-trace-gap
+          length = length-trace-2*gap
           g.move(y=-length)
           g.move(x=-length)
 
