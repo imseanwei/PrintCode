@@ -47,7 +47,7 @@ def spiral(out_wall, gap, trace):
           g.move(x=length)
 
 def spiral_reverse(out_wall, gap, trace):
-      length = out_wall-tipsize
+      length = out_wall
       length_limit = 3*trace
       #starts from bottom right
       g.move(x=-length)
