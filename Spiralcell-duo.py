@@ -34,7 +34,7 @@ def shut_off_pressure():
     g.write('M10000')
 
 def spiral(out_wall, gap, trace):
-      length = out_wall-tipsize
+      length = out_wall
       length_limit = 3*trace
       #starts from upper left
       g.move(x=length)
