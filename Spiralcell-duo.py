@@ -81,7 +81,7 @@ g.dwell(5)
 g.move(Z=3)
 
 #-----transition
-g.abs_move(x=(out_wall+gap), y=-(out_wall-gap), Z=0)
+g.abs_move(x=(out_wall+gap+trace/2), y=-(out_wall-gap-trace/2), Z=0)
 g.set_home(x=0, y=0, Z=0)
 
 #-----spiral_reverse------
