@@ -12,8 +12,8 @@ printvel = 100	#printvel; mm/min
 tipsize = 0.100	#tipsize; mm  
 layerheight =  1*tipsize  #stepheight; mm  
 layers = 9    #layers
-COM = 5		#air-line  
-pressure= 60	#air-pressure,psi  
+COM = 3		#air-line  
+pressure= 70	#air-pressure,psi  
 leadinx = 3 	#leadinx; mm  
 out_wall = 3			#outer-wall-side-length; mm  
 gap = 0.05 	#middle-wall-side-length; mm  
@@ -32,21 +32,25 @@ def shut_off_pressure():
     g.write('M10000')
 
 def spiral_reverse(out_wall, gap, trace):
-      length = out_wall-tipsize
+      length = out_wall
       length_limit = 3*trace
       #starts from bottom right
       g.move(x=-length)
-      while length > length_limit:
-          length = length-trace-gap
+      while length >= length_limit:
+          length = length-trace-2*gap
           g.move(y=length)
           g.move(x=length)
-          length = length-trace-gap
+          length = length-trace-2*gap
           g.move(y=-length)
           g.move(x=-length)
 
 #Code starts
 g.set_home(x=0,y=0,Z=0)
 g.feed(printvel)
+
+#-----transition
+g.abs_move(x=(out_wall+(trace+2*gap)/2), y=-(out_wall-(trace+2*gap)/2), Z=0)
+g.set_home(x=0, y=0, Z=0)
 
 #----Lead in--set-----  
 g.move(x=leadinx)
