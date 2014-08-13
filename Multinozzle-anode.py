@@ -244,7 +244,8 @@ def mill_hole (x_position,y_position,z_depth,z_step,endmill_size,hole_size,feedr
     for i in range (int(z_depth/z_step)):
         g.move(Z=-z_step)
         g.arc(x=0,y=0,radius=-(hole_size-endmill_size)/2)
-        #g.write('G2 X0 Y0 I', (hole_size-endmill_size)/2, 'J0 F', feedrate)
+        line = 'G2 X0 Y0 I{} J0 F{}'.format((hole_size-endmill_size)/2, feedrate)
+        g.write(line)
     g.abs_move(Z=1)
     
 def mill_triangle (z_depth,z_step,triangle_long_side,triangle_height,endmill_size,feedrate):
