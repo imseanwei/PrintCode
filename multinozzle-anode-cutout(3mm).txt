@@ -1,9 +1,0 @@
-G21 (program in mm)
-G61 (default cutting mode)
-G91 (incremental programming)
-
-
-G91
-
-M2
-%
