@@ -1,6 +1,6 @@
 from mecode import G
 g = G(
-        outfile = "/Users/SeanWei/Documents/Python/PrintCode/Spiralcell-duo.txt",
+        outfile = "/Users/SeanWei/Documents/Python/PrintCode/spiralcell/Spiralcell-duo.txt",
         header = "/Users/SeanWei/Documents/Python/PrintCode/header.txt",
         footer = "/Users/SeanWei/Documents/Python/PrintCode/footer.txt",
         aerotech_include = False,
