@@ -56,8 +56,8 @@ drill_peck_step = 1.0
 drill_peck_retract = 1.0
 drill_peck_rest = 3.0
 notch_depth = thickness
-notch_width = 3
-notch_length = 3
+notch_width = 3.0
+notch_length = 5.0
 
 cutout = True
 
@@ -376,7 +376,7 @@ if cutout == True:
     g.feed(500)
     g.abs_move(Z=1)
     g.abs_move(x=0,y=0)
-    g.move(x=-notch_length/2,y=-3/2)
+    g.abs_move(x=-notch_length/2,y=-3/2)
     g.move(Z=-1)
     for i in range(int(thickness-1)):
         g.move(Z=-1)
@@ -445,7 +445,7 @@ if holes == True:
     drill_peck (separator_width+outlet_size+filter_width/2+5,(filter_starting_y_position+filter_ending_y_position)/2,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filters
     drill_peck (separator_width+outlet_size+filter_width/4,filter_ending_y_position-filter_leadin+1,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filter
     drill_peck (separator_width+outlet_size-(filter_width/4),filter_ending_y_position-filter_leadin+1,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filter  
-    drill_peck (separator_width+outlet_size+inlet_to_filter_leadin,filter_ending_y_position,thickness/2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#inlet
+    drill_peck (inlet_to_filter_leadin,filter_ending_y_position,thickness/2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#inlet
     drill_peck (separator_width+outlet_size+inlet_to_filter_leadin-8,filter_ending_y_position+5,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet
     drill_peck (separator_width+outlet_size+inlet_to_filter_leadin+8,filter_ending_y_position-5,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet
     drill_peck (separator_width+outlet_size-(inlet_to_filter_leadin-8),filter_ending_y_position+5,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet-opposite
@@ -469,7 +469,7 @@ if cutout == True:
     g.feed(500)
     g.abs_move(Z=1)
     g.abs_move(x=0,y=0)
-    g.move(x=-notch_length/2+separator_width+outlet_size,y=-3/2)
+    g.abs_move(x=-notch_length/2+separator_width+outlet_size,y=-3/2)
     g.move(Z=-1)
     for i in range(int(thickness-1)):
         g.move(Z=-1)
