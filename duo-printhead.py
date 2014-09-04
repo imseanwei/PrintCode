@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from mecode import G
 
 #endmill_size_6000 = 6.0
@@ -16,7 +17,7 @@ from mecode import G
 facemill = True
 #w/ 3mm endmill
 facemill_depth = 0.3 #in mm
-facemill_length = 80 #in mm
+facemill_length = 110 #in mm
 facemill_width = 120 #in mm
 
 #Global variables 
@@ -25,7 +26,7 @@ outlet_length = 1
 outlet_shift = 3
 outlet_filter_gap = 6
 connection_size = 0.4
-thickness = 12.0
+thickness = 9.0
 bolt_hole_size = 3.0
 mount_hole_size = 6.0
 max_mill_depth_ratio = 0.25
@@ -42,7 +43,7 @@ filter_large_size = 0.350
 filter_mid_size = 0.275
 filter_small_size = 0.200
 filter_large_channel_amount = 32
-filter_mid_channel_amount = 40
+filter_mid_channel_amount = 42
 filter_small_channel_amount = 56
 filter_channel_length = 1
 filter_triangle_spacing = 5
@@ -84,8 +85,9 @@ def drill_peck (x_position,y_position,z_depth,z_step,z_retract,z_rest,hole_endmi
     g.abs_move(x=x_position,y=y_position)
     g.abs_move(Z=0)
     for i in range (int(z_depth/z_step)):
-        g.move(Z=-z_step*i)
+        g.move(Z=-z_step*(i+1))
         g.abs_move(Z=z_retract)
+        g.abs_move(Z=0)
     g.abs_move(Z=z_rest)
 
 def mill_hole (x_position,y_position,z_depth,z_step,endmill_size,hole_size,feedrate):
@@ -134,9 +136,6 @@ def mill_triangle (z_depth,z_step,triangle_long_side,triangle_height,endmill_siz
                 g.move(x=-2*(i+1)*mill_step*slope)
             g.move(x=mill_step*slope*int(-(triangle_height+endmill_size/2)/mill_step),y=-(mill_step)*int(-(triangle_height+endmill_size/2)/mill_step))
         g.abs_move(Z=1)
-        
-
-
 
 #3mm endmill to facemill
 if facemill == True:
@@ -151,9 +150,7 @@ if facemill == True:
     
     #starts bottom left
     mill_face (facemill_depth,facemill_width,facemill_length)    
-    
-    
-    
+        
 
 #250mm endmill for outlet
 if facemill == True:
@@ -171,8 +168,8 @@ if facemill == True:
     g.abs_move(Z=0)
     for i in range(4):
         g.move(Z=-outlet_size/4)
-        g.move(y=outlet_length)
-        g.move(y=-outlet_length)
+        g.move(y=outlet_length+outlet_size)
+        g.move(y=-(outlet_length+outlet_size))
     g.abs_move(Z=1)
     g.abs_move(x=0,y=outlet_length)
     g.abs_move(Z=0)
@@ -184,8 +181,7 @@ if facemill == True:
         g.move(y=-(connection_size-outlet_size))
     g.abs_move(Z=3)        
     
-    
-    
+        
     
 #3mm endmill for outlet leveling and bolt/mount holes
 if holes == True:
@@ -214,7 +210,7 @@ if holes == True:
     #peck-drilling bolt/alignment holes
     g.feed(500)
     drill_peck (0+filter_width/4,filter_starting_y_position+filter_leadout-1,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#outlet
-    drill_peck (0,2+outlet_length,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#outlet
+    drill_peck (0,outlet_length+outlet_filter_gap/2,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#outlet
     drill_peck (-(filter_width/4),filter_starting_y_position+filter_leadout-1,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#outlet
     drill_peck (-(filter_width/2+5),(filter_starting_y_position+filter_ending_y_position)/2,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filters
     drill_peck (0,(filter_starting_y_position+filter_ending_y_position)/2,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filters
@@ -231,7 +227,7 @@ if holes == True:
     mill_hole (0,filter_ending_y_position+5+25.4,thickness,drill_peck_step,3.0,6.0,500)#bolt-hole
     
 
-    #with 1mm endmill to create filter 
+#with 1mm endmill to create filter 
 if filter_section == True:
     g = G(
         outfile = "/Users/SeanWei/Documents/Python/PrintCode/duo-printhead/Duo-Printhead-filter(1mm).txt",
@@ -290,7 +286,7 @@ if filter_section == True:
     
     mill_triangle (filter_small_size,filter_small_size,filter_width,filter_triangle_height,filter_endmill_size,feedrate=500)
     
-    g.abs_move(x=0,y=filter_ending_y_position)
+    g.abs_move(x=0,y=filter_ending_y_position-filter_leadin)
     g.abs_move(Z=-filter_small_size)
     g.move(y=filter_leadin)
     g.move(x=inlet_to_filter_leadin)
@@ -310,54 +306,54 @@ if filter_section == True:
         )
     g.feed(100)
     g.abs_move(Z=1)
-    g.abs_move(x= -filter_width/2,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2)
+    g.abs_move(x= -(filter_width/2-3*filter_small_size),y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2-0.5)
     for i in range(filter_small_channel_amount/2):
         g.abs_move(Z=-filter_small_size)
-        g.move(y=filter_channel_length+filter_small_size)
-        g.move(y=-(filter_channel_length+filter_small_size))
+        g.move(y=filter_channel_length+filter_small_size+1)
+        g.move(y=-(filter_channel_length+filter_small_size+1))
         g.abs_move(Z=1)
         g.move(x=3*filter_small_size)
-    g.abs_move(x= +filter_width/2,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2)
+    g.abs_move(x= +filter_width/2-3*filter_small_size,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2-0.5)
     for i in range(filter_small_channel_amount/2):
         g.abs_move(Z=-filter_small_size)
-        g.move(y=filter_channel_length+filter_small_size)
-        g.move(y=-(filter_channel_length+filter_small_size))
+        g.move(y=filter_channel_length+filter_small_size+1)
+        g.move(y=-(filter_channel_length+filter_small_size+1))
         g.abs_move(Z=1)
         g.move(x=-3*filter_small_size)
-    g.abs_move(x= -filter_width/2,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2+2*filter_channel_length)
+    g.abs_move(x= -filter_width/2,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2+2*filter_channel_length-0.5)
     for i in range(filter_mid_channel_amount/2):
         g.abs_move(Z=-filter_small_size)
-        g.move(y=filter_channel_length+filter_small_size)
+        g.move(y=filter_channel_length+filter_small_size+1)
         g.move(x=filter_mid_size-filter_small_size)
-        g.move(y=-(filter_channel_length+filter_small_size))
+        g.move(y=-(filter_channel_length+filter_small_size+1))
         g.move(x=-(filter_mid_size-filter_small_size))
         g.abs_move(Z=1)
         g.move(x=3*filter_mid_size)    
-    g.abs_move(x= +filter_width/2,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2+2*filter_channel_length)
+    g.abs_move(x= +filter_width/2,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2+2*filter_channel_length-0.5)
     for i in range(filter_mid_channel_amount/2):
         g.abs_move(Z=-filter_small_size)
-        g.move(y=filter_channel_length+filter_small_size)
-        g.move(x=filter_mid_size-filter_small_size)
-        g.move(y=-(filter_channel_length+filter_small_size))
+        g.move(y=filter_channel_length+filter_small_size+1)
         g.move(x=-(filter_mid_size-filter_small_size))
+        g.move(y=-(filter_channel_length+filter_small_size+1))
+        g.move(x=(filter_mid_size-filter_small_size))
         g.abs_move(Z=1)
         g.move(x=-3*filter_mid_size)  
-    g.abs_move(x= -filter_width/2,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2+4*filter_channel_length)
+    g.abs_move(x= -(filter_width/2-3*filter_small_size),y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2+4*filter_channel_length-0.5)
     for i in range(filter_large_channel_amount/2):
         g.abs_move(Z=-filter_small_size)
-        g.move(y=filter_channel_length+filter_small_size)
+        g.move(y=filter_channel_length+filter_small_size+1)
         g.move(x=filter_large_size-filter_small_size)
-        g.move(y=-(filter_channel_length+filter_small_size))
+        g.move(y=-(filter_channel_length+filter_small_size+1))
         g.move(x=-(filter_large_size-filter_small_size))
         g.abs_move(Z=1)
         g.move(x=3*filter_large_size)  
-    g.abs_move(x= +filter_width/2,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2+4*filter_channel_length)
+    g.abs_move(x= +filter_width/2-3*filter_small_size,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2+4*filter_channel_length-0.5)
     for i in range(filter_large_channel_amount/2):
         g.abs_move(Z=-filter_small_size)
-        g.move(y=filter_channel_length+filter_small_size)
-        g.move(x=filter_large_size-filter_small_size)
-        g.move(y=-(filter_channel_length+filter_small_size))
+        g.move(y=filter_channel_length+filter_small_size+1)
         g.move(x=-(filter_large_size-filter_small_size))
+        g.move(y=-(filter_channel_length+filter_small_size+1))
+        g.move(x=(filter_large_size-filter_small_size))
         g.abs_move(Z=1)
         g.move(x=-3*filter_large_size)         
     g.abs_move(Z=3)    
@@ -380,33 +376,42 @@ if cutout == True:
     g.move(Z=-1)
     for i in range(int(thickness-1)):
         g.move(Z=-1)
-        g.move(x=-(inlet_to_filter_leadin+8+5)-(-notch_length/2),y=filter_ending_y_position+5+5+3/2)
+        
+        g.move(x=-(inlet_to_filter_leadin+8+5)-(-notch_length/2),y=(filter_starting_y_position+filter_ending_y_position)/2)
+        g.move(y=filter_ending_y_position+5+5+3/2-(filter_starting_y_position+filter_ending_y_position)/2)
+        
         g.move(x=-8-(-(inlet_to_filter_leadin+8+5)))
         g.move(y=filter_ending_y_position+5+25.4+8-(filter_ending_y_position+5+5+3/2))
         g.move(x=16)
         g.move(y=-(filter_ending_y_position+5+25.4+8-(filter_ending_y_position+5+5+3/2)))
         g.move(x=-8-(-(inlet_to_filter_leadin+8+5)))
-        g.move(x=-(inlet_to_filter_leadin+8+5)-(-notch_length/2),y=-(filter_ending_y_position+5+5+3/2))
+        
+        g.move(y=-(filter_ending_y_position+5+5+3/2-(filter_starting_y_position+filter_ending_y_position)/2))
+        g.move(x=-(inlet_to_filter_leadin+8+5)-(-notch_length/2),y=-(filter_starting_y_position+filter_ending_y_position)/2)
+        
         g.move(x=-notch_length)
     g.move(Z=-1)
-    g.move(x=0.45*(-(inlet_to_filter_leadin+8+5)-(-notch_length/2)),y=0.45*(filter_ending_y_position+5+5+3/2))
+    g.move(x=-(inlet_to_filter_leadin+8+5)-(-notch_length/2),y=(filter_starting_y_position+filter_ending_y_position)/2)
+    g.move(y=filter_ending_y_position+5+5+3/2-(filter_starting_y_position+filter_ending_y_position)/2)
+   
+    g.move(x=0.45*(-8-(-(inlet_to_filter_leadin+8+5))))
     g.move(Z=1)
-    g.move(x=0.1*(-(inlet_to_filter_leadin+8+5)-(-notch_length/2)),y=0.1*(filter_ending_y_position+5+5+3/2))
+    g.move(x=0.1*(-8-(-(inlet_to_filter_leadin+8+5))))
     g.move(Z=-1)
-    g.move(x=0.45*(-(inlet_to_filter_leadin+8+5)-(-notch_length/2)),y=0.45*(filter_ending_y_position+5+5+3/2))
+    g.move(x=0.45*(-8-(-(inlet_to_filter_leadin+8+5))))
     
-    g.move(x=-8-(-(inlet_to_filter_leadin+8+5)))
     g.move(y=filter_ending_y_position+5+25.4+8-(filter_ending_y_position+5+5+3/2))
     g.move(x=16)
     g.move(y=-(filter_ending_y_position+5+25.4+8-(filter_ending_y_position+5+5+3/2)))
-    g.move(x=-8-(-(inlet_to_filter_leadin+8+5)))
     
-    g.move(x=0.45*(-(inlet_to_filter_leadin+8+5)-(-notch_length/2)),y=0.45*(-(filter_ending_y_position+5+5+3/2)))
+    g.move(x=0.45*(-8-(-(inlet_to_filter_leadin+8+5))))
     g.move(Z=1)
-    g.move(x=0.1*(-(inlet_to_filter_leadin+8+5)-(-notch_length/2)),y=0.1*(-(filter_ending_y_position+5+5+3/2)))
+    g.move(x=0.1*(-8-(-(inlet_to_filter_leadin+8+5))))
     g.move(Z=-1)
-    g.move(x=0.45*(-(inlet_to_filter_leadin+8+5)-(-notch_length/2)),y=0.45*(-(filter_ending_y_position+5+5+3/2)))
-    g.move(Z=1)
+    g.move(x=0.45*(-8-(-(inlet_to_filter_leadin+8+5))))
+    
+    g.move(y=-(filter_ending_y_position+5+5+3/2-(filter_starting_y_position+filter_ending_y_position)/2))
+    g.move(x=-(inlet_to_filter_leadin+8+5)-(-notch_length/2),y=-(filter_starting_y_position+filter_ending_y_position)/2)
     
     g.abs_move(Z=3)
 
@@ -422,7 +427,6 @@ if holes == True:
         print_lines = False, 
         )
         
-    
     #notch
     g.feed(500)
     g.abs_move(Z=3)
@@ -438,7 +442,7 @@ if holes == True:
     #peck-drilling bolt/alignment holes
     g.feed(500)
     drill_peck (separator_width+outlet_size+filter_width/4,filter_starting_y_position+filter_leadout-1,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#outlet
-    drill_peck (separator_width+outlet_size,2+outlet_length,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#outlet
+    drill_peck (separator_width+outlet_size,outlet_length+outlet_filter_gap/2,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#outlet
     drill_peck (separator_width+outlet_size-(filter_width/4),filter_starting_y_position+filter_leadout-1,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#outlet
     drill_peck (separator_width+outlet_size-(filter_width/2+5),(filter_starting_y_position+filter_ending_y_position)/2,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filters
     drill_peck (separator_width+outlet_size,(filter_starting_y_position+filter_ending_y_position)/2,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filters
@@ -473,33 +477,42 @@ if cutout == True:
     g.move(Z=-1)
     for i in range(int(thickness-1)):
         g.move(Z=-1)
-        g.move(x=-(inlet_to_filter_leadin+8+5)-(-notch_length/2),y=filter_ending_y_position+5+5+3/2)
+        
+        g.move(x=-(inlet_to_filter_leadin+8+5)-(-notch_length/2),y=(filter_starting_y_position+filter_ending_y_position)/2)
+        g.move(y=filter_ending_y_position+5+5+3/2-(filter_starting_y_position+filter_ending_y_position)/2)
+        
         g.move(x=-8-(-(inlet_to_filter_leadin+8+5)))
         g.move(y=filter_ending_y_position+5+25.4+8-(filter_ending_y_position+5+5+3/2))
         g.move(x=16)
         g.move(y=-(filter_ending_y_position+5+25.4+8-(filter_ending_y_position+5+5+3/2)))
         g.move(x=-8-(-(inlet_to_filter_leadin+8+5)))
-        g.move(x=-(inlet_to_filter_leadin+8+5)-(-notch_length/2),y=-(filter_ending_y_position+5+5+3/2))
+        
+        g.move(y=-(filter_ending_y_position+5+5+3/2-(filter_starting_y_position+filter_ending_y_position)/2))
+        g.move(x=-(inlet_to_filter_leadin+8+5)-(-notch_length/2),y=-(filter_starting_y_position+filter_ending_y_position)/2)
+        
         g.move(x=-notch_length)
     g.move(Z=-1)
-    g.move(x=0.45*(-(inlet_to_filter_leadin+8+5)-(-notch_length/2)),y=0.45*(filter_ending_y_position+5+5+3/2))
+    g.move(x=-(inlet_to_filter_leadin+8+5)-(-notch_length/2),y=(filter_starting_y_position+filter_ending_y_position)/2)
+    g.move(y=filter_ending_y_position+5+5+3/2-(filter_starting_y_position+filter_ending_y_position)/2)
+   
+    g.move(x=0.45*(-8-(-(inlet_to_filter_leadin+8+5))))
     g.move(Z=1)
-    g.move(x=0.1*(-(inlet_to_filter_leadin+8+5)-(-notch_length/2)),y=0.1*(filter_ending_y_position+5+5+3/2))
+    g.move(x=0.1*(-8-(-(inlet_to_filter_leadin+8+5))))
     g.move(Z=-1)
-    g.move(x=0.45*(-(inlet_to_filter_leadin+8+5)-(-notch_length/2)),y=0.45*(filter_ending_y_position+5+5+3/2))
+    g.move(x=0.45*(-8-(-(inlet_to_filter_leadin+8+5))))
     
-    g.move(x=-8-(-(inlet_to_filter_leadin+8+5)))
     g.move(y=filter_ending_y_position+5+25.4+8-(filter_ending_y_position+5+5+3/2))
     g.move(x=16)
     g.move(y=-(filter_ending_y_position+5+25.4+8-(filter_ending_y_position+5+5+3/2)))
-    g.move(x=-8-(-(inlet_to_filter_leadin+8+5)))
     
-    g.move(x=0.45*(-(inlet_to_filter_leadin+8+5)-(-notch_length/2)),y=0.45*(-(filter_ending_y_position+5+5+3/2)))
+    g.move(x=0.45*(-8-(-(inlet_to_filter_leadin+8+5))))
     g.move(Z=1)
-    g.move(x=0.1*(-(inlet_to_filter_leadin+8+5)-(-notch_length/2)),y=0.1*(-(filter_ending_y_position+5+5+3/2)))
+    g.move(x=0.1*(-8-(-(inlet_to_filter_leadin+8+5))))
     g.move(Z=-1)
-    g.move(x=0.45*(-(inlet_to_filter_leadin+8+5)-(-notch_length/2)),y=0.45*(-(filter_ending_y_position+5+5+3/2)))
-    g.move(Z=1)
+    g.move(x=0.45*(-8-(-(inlet_to_filter_leadin+8+5))))
+    
+    g.move(y=-(filter_ending_y_position+5+5+3/2-(filter_starting_y_position+filter_ending_y_position)/2))
+    g.move(x=-(inlet_to_filter_leadin+8+5)-(-notch_length/2),y=-(filter_starting_y_position+filter_ending_y_position)/2)
     
     g.abs_move(Z=3)
 
