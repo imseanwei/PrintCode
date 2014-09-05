@@ -162,6 +162,7 @@ if facemill == True:
         direct_write = False,
         print_lines = False, 
         )
+    g.feed(150)
 
     #outlet
     g.abs_move(x=0,y=-outlet_size)
@@ -240,18 +241,18 @@ if filter_section == True:
     
     #outlet to filter connection
     g.abs_move(Z=1)
-    g.abs_move(x=outlet_shift,y=outlet_length)
+    g.abs_move(x=outlet_shift,y=outlet_length+0.5) #0.5 is half the endmill size
     g.abs_move(Z=0)
     g.move(Z=-outlet_size)
-    g.move(y=outlet_filter_gap)
+    g.move(y=outlet_filter_gap-0.5)
     g.move(x=-outlet_shift)
     g.move(x=outlet_shift)
-    g.move(y=-outlet_filter_gap)
+    g.move(y=-(outlet_filter_gap-0.5))
     g.move(Z=1)
       
             
     #outline filter
-    g.feed(500)
+    g.feed(250)
     g.abs_move(x=0,y=filter_starting_y_position+filter_endmill_size/2-outlet_size/2)
     g.abs_move(Z=0)
     g.abs_move(Z=-filter_small_size)
@@ -515,6 +516,91 @@ if cutout == True:
     g.move(x=-(inlet_to_filter_leadin+8+5)-(-notch_length/2),y=-(filter_starting_y_position+filter_ending_y_position)/2)
     
     g.abs_move(Z=3)
+
+#3mm endmill for outlet leveling and bolt/mount holes
+if holes == True:
+    g = G(
+        outfile = "/Users/SeanWei/Documents/Python/PrintCode/duo-printhead/Duo-Printhead-holes-g(M3).txt",
+        header = "/Users/SeanWei/Documents/Python/PrintCode/header.txt",
+        footer = "/Users/SeanWei/Documents/Python/PrintCode/footer.txt",
+        aerotech_include = False,
+        direct_write = False,
+        print_lines = False, 
+        )
+        
+    
+    #notch
+    g.feed(500)
+    g.abs_move(Z=3)
+    g.abs_move(x=-notch_length/2,y=-3.0/2)
+    g.abs_move(Z=0)
+    for i in range (1):
+        g.move(Z=-2)
+        g.move(x=notch_length)
+        g.move(x=-notch_length)
+    g.abs_move(Z=3)
+
+
+    #peck-drilling bolt/alignment holes
+    g.feed(500)
+    drill_peck (0+filter_width/4,filter_starting_y_position+filter_leadout-1,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#outlet
+    drill_peck (0,outlet_length+outlet_filter_gap/2,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#outlet
+    drill_peck (-(filter_width/4),filter_starting_y_position+filter_leadout-1,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#outlet
+    drill_peck (-(filter_width/2+5),(filter_starting_y_position+filter_ending_y_position)/2,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filters
+    drill_peck (0,(filter_starting_y_position+filter_ending_y_position)/2,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filters
+    drill_peck (+filter_width/2+5,(filter_starting_y_position+filter_ending_y_position)/2,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filters
+    drill_peck (+filter_width/4,filter_ending_y_position-filter_leadin+1,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filter
+    drill_peck (-(filter_width/4),filter_ending_y_position-filter_leadin+1,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filter  
+    drill_peck (+inlet_to_filter_leadin-8,filter_ending_y_position+5,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet
+    drill_peck (+inlet_to_filter_leadin+8,filter_ending_y_position-5,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet
+    drill_peck (-(inlet_to_filter_leadin-8),filter_ending_y_position+5,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet-opposite
+    drill_peck (-(inlet_to_filter_leadin+8),filter_ending_y_position-5,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet-opposite 
+    drill_peck (0,filter_ending_y_position+5+25.4/2,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#alignment-top
+    mill_hole (0,filter_ending_y_position+5,2,drill_peck_step,3.0,6.0,500)#bolt-hole
+    mill_hole (0,filter_ending_y_position+5+25.4,2,drill_peck_step,3.0,6.0,500)#bolt-hole
+    
+
+#with 3mm endmill to cut-out
+if cutout == True:
+    g = G(
+        outfile = "/Users/SeanWei/Documents/Python/PrintCode/duo-printhead/Duo-Printhead-cutout-g(3mm).txt",
+        header = "/Users/SeanWei/Documents/Python/PrintCode/header.txt",
+        footer = "/Users/SeanWei/Documents/Python/PrintCode/footer.txt",
+        aerotech_include = False,
+        direct_write = False,
+        print_lines = False, 
+        )
+    g.feed(500)
+    g.abs_move(Z=1)
+    g.abs_move(x=0,y=0)
+    g.abs_move(x=-notch_length/2,y=-3/2)
+    g.move(Z=-1)
+    g.move(x=-(inlet_to_filter_leadin+8+5)-(-notch_length/2),y=(filter_starting_y_position+filter_ending_y_position)/2)
+    g.move(y=filter_ending_y_position+5+5+3/2-(filter_starting_y_position+filter_ending_y_position)/2)
+   
+    g.move(x=0.45*(-8-(-(inlet_to_filter_leadin+8+5))))
+    g.move(Z=1)
+    g.move(x=0.1*(-8-(-(inlet_to_filter_leadin+8+5))))
+    g.move(Z=-1)
+    g.move(x=0.45*(-8-(-(inlet_to_filter_leadin+8+5))))
+    
+    g.move(y=filter_ending_y_position+5+25.4+8-(filter_ending_y_position+5+5+3/2))
+    g.move(x=16)
+    g.move(y=-(filter_ending_y_position+5+25.4+8-(filter_ending_y_position+5+5+3/2)))
+    
+    g.move(x=0.45*(-8-(-(inlet_to_filter_leadin+8+5))))
+    g.move(Z=1)
+    g.move(x=0.1*(-8-(-(inlet_to_filter_leadin+8+5))))
+    g.move(Z=-1)
+    g.move(x=0.45*(-8-(-(inlet_to_filter_leadin+8+5))))
+    
+    g.move(y=-(filter_ending_y_position+5+5+3/2-(filter_starting_y_position+filter_ending_y_position)/2))
+    g.move(x=-(inlet_to_filter_leadin+8+5)-(-notch_length/2),y=-(filter_starting_y_position+filter_ending_y_position)/2)
+    
+    g.move(x=-notch_length)
+    
+    g.abs_move(Z=3)
+
 
 #To end
 #g.view(backend='matplotlib')
