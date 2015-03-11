@@ -90,12 +90,14 @@ for i in range(number_y):
         for i in range(layers):
             g.rect(square_edge-2*tipsize_pack_in-tipsize_out,square_edge-2*tipsize_pack_in-tipsize_out)
             
-            for i in range(fill_line_number):    
+            for i in range(fill_line_number-1):    
                 g.move(fill_line_width, fill_line_width)
                 g.rect(square_edge-2*tipsize_pack_in-tipsize_out-2*(i+1)*fill_line_width,square_edge-2*tipsize_pack_in-tipsize_out-2*(i+1)*fill_line_width)
             
             g.abs_move(x=0,y=0)
-            g.move(Z=layerheight)
+            
+            if layers != 1:
+                g.move(Z=layerheight)
         
         pressure_off()
         g.dwell(3.0)
