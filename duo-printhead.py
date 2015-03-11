@@ -18,19 +18,21 @@ facemill = True
 #w/ 3mm endmill
 facemill_depth = 0.3 #in mm
 facemill_length = 110 #in mm
-facemill_width = 120 #in mm
+facemill_width = 110 #in mm
 
 #Global variables 
 outlet_size = 0.250 #in mm
-outlet_length = 1
+outlet_length = 3
 outlet_shift = 3
 outlet_filter_gap = 6
 connection_size = 0.4
-thickness = 9.0
+thickness = 12.0
 bolt_hole_size = 3.0
 mount_hole_size = 6.0
 max_mill_depth_ratio = 0.25
 separator_width = 0.075
+
+#inlet need 13/64 bench press.
 
 
 filter_section = True
@@ -219,9 +221,9 @@ if holes == True:
     drill_peck (+filter_width/4,filter_ending_y_position-filter_leadin+1,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filter
     drill_peck (-(filter_width/4),filter_ending_y_position-filter_leadin+1,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filter  
     drill_peck (+inlet_to_filter_leadin,filter_ending_y_position,thickness/2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#inlet
-    drill_peck (+inlet_to_filter_leadin-8,filter_ending_y_position+5,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet
+    drill_peck (+inlet_to_filter_leadin-8,filter_ending_y_position+4,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet
     drill_peck (+inlet_to_filter_leadin+8,filter_ending_y_position-5,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet
-    drill_peck (-(inlet_to_filter_leadin-8),filter_ending_y_position+5,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet-opposite
+    drill_peck (-(inlet_to_filter_leadin-8),filter_ending_y_position+4,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet-opposite
     drill_peck (-(inlet_to_filter_leadin+8),filter_ending_y_position-5,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet-opposite 
     drill_peck (0,filter_ending_y_position+5+25.4/2,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#alignment-top
     mill_hole (0,filter_ending_y_position+5,thickness,drill_peck_step,3.0,6.0,500)#bolt-hole
@@ -259,7 +261,7 @@ if filter_section == True:
     g.move(y=filter_leadout)
     g.abs_move(Z=0)
     
-    mill_triangle (filter_small_size,filter_small_size,filter_width,-filter_triangle_height,filter_endmill_size,feedrate=500)
+    mill_triangle (filter_small_size,filter_small_size,filter_width,-filter_triangle_height,filter_endmill_size,feedrate=250)
     
     g.abs_move(x= -filter_width/2,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_channel_length+filter_endmill_size)
     
@@ -285,7 +287,7 @@ if filter_section == True:
     g.abs_move(x=0,y=filter_ending_y_position-filter_leadout)
     g.abs_move(Z=0)
     
-    mill_triangle (filter_small_size,filter_small_size,filter_width,filter_triangle_height,filter_endmill_size,feedrate=500)
+    mill_triangle (filter_small_size,filter_small_size,filter_width,filter_triangle_height,filter_endmill_size,feedrate=250)
     
     g.abs_move(x=0,y=filter_ending_y_position-filter_leadin)
     g.abs_move(Z=-filter_small_size)
@@ -360,7 +362,7 @@ if filter_section == True:
     g.abs_move(Z=3)    
 
  
-#with 3mm endmill to cut-out
+#with 3mm  endmill to cut-out
 if cutout == True:
     g = G(
         outfile = "/Users/SeanWei/Documents/Python/PrintCode/duo-printhead/Duo-Printhead-cutout(3mm).txt",
@@ -451,9 +453,9 @@ if holes == True:
     drill_peck (separator_width+outlet_size+filter_width/4,filter_ending_y_position-filter_leadin+1,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filter
     drill_peck (separator_width+outlet_size-(filter_width/4),filter_ending_y_position-filter_leadin+1,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filter  
     drill_peck (inlet_to_filter_leadin,filter_ending_y_position,thickness/2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#inlet
-    drill_peck (separator_width+outlet_size+inlet_to_filter_leadin-8,filter_ending_y_position+5,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet
+    drill_peck (separator_width+outlet_size+inlet_to_filter_leadin-8,filter_ending_y_position+4,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet
     drill_peck (separator_width+outlet_size+inlet_to_filter_leadin+8,filter_ending_y_position-5,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet
-    drill_peck (separator_width+outlet_size-(inlet_to_filter_leadin-8),filter_ending_y_position+5,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet-opposite
+    drill_peck (separator_width+outlet_size-(inlet_to_filter_leadin-8),filter_ending_y_position+4,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet-opposite
     drill_peck (separator_width+outlet_size-(inlet_to_filter_leadin+8),filter_ending_y_position-5,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet-opposite 
     drill_peck (separator_width+outlet_size,filter_ending_y_position+5+25.4/2,thickness,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#alignment-top
     mill_hole (separator_width+outlet_size,filter_ending_y_position+5,thickness,drill_peck_step,3.0,6.0,500)#bolt-hole
@@ -551,9 +553,9 @@ if holes == True:
     drill_peck (+filter_width/2+5,(filter_starting_y_position+filter_ending_y_position)/2,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filters
     drill_peck (+filter_width/4,filter_ending_y_position-filter_leadin+1,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filter
     drill_peck (-(filter_width/4),filter_ending_y_position-filter_leadin+1,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-filter  
-    drill_peck (+inlet_to_filter_leadin-8,filter_ending_y_position+5,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet
+    drill_peck (+inlet_to_filter_leadin-8,filter_ending_y_position+4,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet
     drill_peck (+inlet_to_filter_leadin+8,filter_ending_y_position-5,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet
-    drill_peck (-(inlet_to_filter_leadin-8),filter_ending_y_position+5,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet-opposite
+    drill_peck (-(inlet_to_filter_leadin-8),filter_ending_y_position+4,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet-opposite
     drill_peck (-(inlet_to_filter_leadin+8),filter_ending_y_position-5,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#bolt-inlet-opposite 
     drill_peck (0,filter_ending_y_position+5+25.4/2,2,drill_peck_step,drill_peck_retract,drill_peck_rest,3.0,500)#alignment-top
     mill_hole (0,filter_ending_y_position+5,2,drill_peck_step,3.0,6.0,500)#bolt-hole

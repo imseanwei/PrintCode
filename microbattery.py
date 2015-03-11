@@ -10,20 +10,20 @@ g = G(
         
 #Define variables
 printvel = 150	#printvel; mm/min
-tipsize = 0.030	#tipsize; mm  
+tipsize = 0.200	#tipsize; mm  
 layerheight =  1*tipsize  #stepheight; mm  
 layers = 20    #layers, must be even
 COM = 5		#air-line  
 press= 50	#air-pressure,psi  
-leadinx = 1.5 	#leadinx; mm  
+leadinx = 2.0 	#leadinx; mm  
 teeth_length = 1.00000
 separator_gap = 0.05
 teeth_interdistance = 4*tipsize+2*separator_gap
 teeth_amount = 5
 column_x = 1
 row_y = 1
-spacing_x = 5
-spacing_y = 3
+spacing_x = 5.0
+spacing_y = 3.0
 
 #def function
 
