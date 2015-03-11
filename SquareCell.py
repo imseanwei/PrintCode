@@ -171,5 +171,5 @@ for i in range(number_y):
 
 #To end
 #g.view(backend='matplotlib')
-g.view()
+#g.view()
 g.teardown()
