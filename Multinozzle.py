@@ -110,7 +110,7 @@ filter_large_size = 0.350
 filter_mid_size = 0.275
 filter_small_size = 0.200
 filter_large_channel_amount = 32
-filter_mid_channel_amount = 40
+filter_mid_channel_amount = 42
 filter_small_channel_amount = 56
 filter_channel_length = 1
 filter_triangle_spacing = 5
@@ -231,8 +231,9 @@ def drill_peck (x_position,y_position,z_depth,z_step,z_retract,z_rest,hole_endmi
     g.abs_move(x=x_position,y=y_position)
     g.abs_move(Z=0)
     for i in range (int(z_depth/z_step)):
-        g.move(Z=-z_step*i)
+        g.move(Z=-z_step*(i+1))
         g.abs_move(Z=z_retract)
+        g.abs_move(Z=0)
     g.abs_move(Z=z_rest)
 
 def mill_hole (x_position,y_position,z_depth,z_step,endmill_size,hole_size,feedrate):
@@ -519,57 +520,57 @@ if filter_section == True:
         )
     g.feed(100)
     g.abs_move(Z=1)
-    g.abs_move(x=-filter_width/2,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2)
+    g.abs_move(x= -(filter_width/2-3*filter_small_size),y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2-0.5)
     for i in range(filter_small_channel_amount/2):
         g.abs_move(Z=-filter_small_size)
-        g.move(y=filter_channel_length+filter_small_size)
-        g.move(y=-(filter_channel_length+filter_small_size))
+        g.move(y=filter_channel_length+filter_small_size+1)
+        g.move(y=-(filter_channel_length+filter_small_size+1))
         g.abs_move(Z=1)
         g.move(x=3*filter_small_size)
-    g.abs_move(x=filter_width/2,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2)
+    g.abs_move(x= +filter_width/2-3*filter_small_size,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2-0.5)
     for i in range(filter_small_channel_amount/2):
         g.abs_move(Z=-filter_small_size)
-        g.move(y=filter_channel_length+filter_small_size)
-        g.move(y=-(filter_channel_length+filter_small_size))
+        g.move(y=filter_channel_length+filter_small_size+1)
+        g.move(y=-(filter_channel_length+filter_small_size+1))
         g.abs_move(Z=1)
         g.move(x=-3*filter_small_size)
-    g.abs_move(x=-filter_width/2,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2+2*filter_channel_length)
+    g.abs_move(x= -filter_width/2,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2+2*filter_channel_length-0.5)
     for i in range(filter_mid_channel_amount/2):
         g.abs_move(Z=-filter_small_size)
-        g.move(y=filter_channel_length+filter_small_size)
+        g.move(y=filter_channel_length+filter_small_size+1)
         g.move(x=filter_mid_size-filter_small_size)
-        g.move(y=-(filter_channel_length+filter_small_size))
+        g.move(y=-(filter_channel_length+filter_small_size+1))
         g.move(x=-(filter_mid_size-filter_small_size))
         g.abs_move(Z=1)
         g.move(x=3*filter_mid_size)    
-    g.abs_move(x=filter_width/2,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2+2*filter_channel_length)
+    g.abs_move(x= +filter_width/2,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2+2*filter_channel_length-0.5)
     for i in range(filter_mid_channel_amount/2):
         g.abs_move(Z=-filter_small_size)
-        g.move(y=filter_channel_length+filter_small_size)
-        g.move(x=filter_mid_size-filter_small_size)
-        g.move(y=-(filter_channel_length+filter_small_size))
+        g.move(y=filter_channel_length+filter_small_size+1)
         g.move(x=-(filter_mid_size-filter_small_size))
+        g.move(y=-(filter_channel_length+filter_small_size+1))
+        g.move(x=(filter_mid_size-filter_small_size))
         g.abs_move(Z=1)
         g.move(x=-3*filter_mid_size)  
-    g.abs_move(x=-filter_width/2,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2+4*filter_channel_length)
+    g.abs_move(x= -(filter_width/2-3*filter_small_size),y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2+4*filter_channel_length-0.5)
     for i in range(filter_large_channel_amount/2):
         g.abs_move(Z=-filter_small_size)
-        g.move(y=filter_channel_length+filter_small_size)
+        g.move(y=filter_channel_length+filter_small_size+1)
         g.move(x=filter_large_size-filter_small_size)
-        g.move(y=-(filter_channel_length+filter_small_size))
+        g.move(y=-(filter_channel_length+filter_small_size+1))
         g.move(x=-(filter_large_size-filter_small_size))
         g.abs_move(Z=1)
         g.move(x=3*filter_large_size)  
-    g.abs_move(x=filter_width/2,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2+4*filter_channel_length)
+    g.abs_move(x= +filter_width/2-3*filter_small_size,y=filter_starting_y_position+filter_leadout+filter_triangle_height+filter_endmill_size/2-filter_small_size/2+4*filter_channel_length-0.5)
     for i in range(filter_large_channel_amount/2):
         g.abs_move(Z=-filter_small_size)
-        g.move(y=filter_channel_length+filter_small_size)
-        g.move(x=filter_large_size-filter_small_size)
-        g.move(y=-(filter_channel_length+filter_small_size))
+        g.move(y=filter_channel_length+filter_small_size+1)
         g.move(x=-(filter_large_size-filter_small_size))
+        g.move(y=-(filter_channel_length+filter_small_size+1))
+        g.move(x=(filter_large_size-filter_small_size))
         g.abs_move(Z=1)
         g.move(x=-3*filter_large_size)         
-    g.abs_move(Z=3)
+    g.abs_move(Z=3) 
     
 #with 3mm endmill to cut-out
 if cutout == True:
