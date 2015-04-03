@@ -2,6 +2,13 @@
 #rely on home position set with 1st code loaded (separator)
 #needs to re-zero "Z" between codes/syringes, but assume same x, y
 
+#packaging bottom
+#cathode
+#separator
+#packaging top
+#anode
+#sealing
+
 from mecode import G
 
 #nordson Tips sizes (color, inner diameter, outer diamter, in mm)   
@@ -38,8 +45,11 @@ offset_pack_out = -(tipsize_pack_out-tipsize_pack_in)/2 #lower left corner
 layers = 1    #layers for electrodes, separator; mm
 layerheight =  0.5  #stepheight; mm  
 layerheight_sep = 0.05
-layers_pack = int((layers*layerheight*2+layerheight_sep)/tipsize_pack_in)+1
-layerheight_pack = (layers*layerheight*2+layerheight_sep)/layers_pack
+layers_pack_1 = int((layers*layerheight)/tipsize_pack_in)+1
+layerheight_pack_1 = (layers*layerheight)/layers_pack_1
+layers_pack_2 = int((layers*layerheight+layerheight_sep)/tipsize_pack_in)+1
+layerheight_pack_2 = (layers*layerheight+layerheight_sep)/layers_pack_2
+layerheight_seal = 0.1
 
 port = 1
 press = 30
@@ -80,19 +90,19 @@ def square_3D (path_length, path_width, nozzle_size, z_step, layers): #starts lo
                 g.move(y=-(path_length-i*2*step_size))
                 g.move(x=step_size, y=step_size) 
                 
-            g.move(x=path_length-i*2*step_size)
-            g.move(y=path_length-i*2*step_size)
-            g.move(x=-(path_length-i*2*step_size))
-            g.move(y=-(path_length-i*2*step_size))
+            g.move(x=path_length-step_number*2*step_size)
+            g.move(y=path_length-step_number*2*step_size)
+            g.move(x=-(path_length-step_number*2*step_size))
+            g.move(y=-(path_length-step_number*2*step_size))
             
             pressure_off()
             g.dwell(3)
-            g.move(x=-step_size*(i-1), y=-step_size*(i-1))
+            g.move(x=-step_size*(step_number-1), y=-step_size*(step_number-1))
                                                             
   
-#file- 1packaging
+#file- 1packaging_bottom
 g = G(
-        outfile = "/Users/SeanWei/Documents/Python/PrintCode/squarecell/squarecell_20mm_3mm_1packaging.txt",
+        outfile = "/Users/SeanWei/Documents/Python/PrintCode/squarecell/squarecell_20mm_3mm_1packaging_bottom.txt",
         header = "/Users/SeanWei/Documents/Python/PrintCode/header_batteryprinter.txt",
         footer = "/Users/SeanWei/Documents/Python/PrintCode/footer_batteryprinter.txt",
         aerotech_include = False,
@@ -103,13 +113,14 @@ g = G(
 #Code starts
 g.set_home(x=0,y=0,Z=0) #lower left corner, nozzle edge with substrate edge, absolute zero
 g.feed(printvel_pack)
-g.abs_move(x=offset_pack_in, y=offset_pack_in, Z=layerheight_pack)
+g.abs_move(Z=layerheight_pack_1)
+g.abs_move(x=offset_pack_in, y=offset_pack_in, )
 pressure_set(port, press_pack)
 pressure_on()
         
-for i in range(layers_pack):
+for i in range(layers_pack_1):
     g.rect(square_edge-2*square_thickness+tipsize_pack_in, square_edge-2*square_thickness+tipsize_pack_in)
-    g.move(Z=layerheight_pack)
+    g.move(Z=layerheight_pack_1)
         
 pressure_off()
 g.dwell(3.0)
@@ -117,19 +128,18 @@ g.dwell(3.0)
 g.abs_move(Z=5)
                 
 g.abs_move(x=offset_pack_out, y=offset_pack_out)
-g.abs_move(Z=layerheight_pack)
+g.abs_move(Z=layerheight_pack_1)
 pressure_set(port, press_pack)
 pressure_on()
         
-for i in range(layers_pack):
+for i in range(layers_pack_1):
     g.rect(square_edge-tipsize_pack_in, square_edge-tipsize_pack_in)
-    g.move(Z=layerheight_pack)
+    g.move(Z=layerheight_pack_1)
         
 pressure_off()
 g.dwell(3.0)
-g.rect(square_edge-tipsize_pack_in, square_edge-tipsize_pack_in) #to level residue
-    
-g.abs_move(x=0, y=0, Z=5)
+  
+g.abs_move(Z=5)
 
 #file - 2cathode
 g = G(
@@ -150,6 +160,7 @@ pressure_set(port, press)
 square_3D (square_edge-2*tipsize_pack_in-tipsize_out, square_thickness-2*tipsize_pack_in, tipsize_out, layerheight, layers)
 g.abs_move(Z=5)
         
+
 #file - 3separator
 g = G(
         outfile = "/Users/SeanWei/Documents/Python/PrintCode/squarecell/squarecell_20mm_3mm_3separator.txt",
@@ -169,9 +180,51 @@ pressure_set(port, press)
 square_3D (square_edge-2*tipsize_pack_in-tipsize_out, square_thickness-2*tipsize_pack_in, tipsize_out, layerheight_sep, 1)
 g.abs_move(Z=5)       
 
-#file - 4cathode
+#file- 4packaging_top
 g = G(
-        outfile = "/Users/SeanWei/Documents/Python/PrintCode/squarecell/squarecell_20mm_3mm_4anode.txt",
+        outfile = "/Users/SeanWei/Documents/Python/PrintCode/squarecell/squarecell_20mm_3mm_4packaging_top.txt",
+        header = "/Users/SeanWei/Documents/Python/PrintCode/header_batteryprinter.txt",
+        footer = "/Users/SeanWei/Documents/Python/PrintCode/footer_batteryprinter.txt",
+        aerotech_include = False,
+        direct_write = False,
+        print_lines = False, 
+        )
+
+#Code starts
+g.set_home(x=0,y=0,Z=0) #lower left corner, nozzle edge with substrate edge, absolute zero
+g.feed(printvel_pack)
+g.abs_move(x=offset_pack_in, y=offset_pack_in)
+g.abs_move(Z=layers*layerheight+layerheight_sep+layerheight_pack_2)
+pressure_set(port, press_pack)
+pressure_on()
+        
+for i in range(layers_pack_2):
+    g.rect(square_edge-2*square_thickness+tipsize_pack_in, square_edge-2*square_thickness+tipsize_pack_in)
+    g.move(Z=layerheight_pack_2)
+        
+pressure_off()
+g.dwell(3.0)
+
+g.abs_move(Z=5)
+                
+g.abs_move(x=offset_pack_out, y=offset_pack_out)
+g.abs_move(Z=layers*layerheight+layerheight_sep+layerheight_pack_2)
+pressure_set(port, press_pack)
+pressure_on()
+        
+for i in range(layers_pack_2):
+    g.rect(square_edge-tipsize_pack_in, square_edge-tipsize_pack_in)
+    g.move(Z=layerheight_pack_2)
+        
+pressure_off()
+g.dwell(3.0)
+  
+g.abs_move(Z=5)
+
+
+#file - 5anode
+g = G(
+        outfile = "/Users/SeanWei/Documents/Python/PrintCode/squarecell/squarecell_20mm_3mm_5anode.txt",
         header = "/Users/SeanWei/Documents/Python/PrintCode/header_batteryprinter.txt",
         footer = "/Users/SeanWei/Documents/Python/PrintCode/footer_batteryprinter.txt",
         aerotech_include = False,
@@ -187,6 +240,45 @@ g.feed(printvel)
 pressure_set(port, press)       
 square_3D (square_edge-2*tipsize_pack_in-tipsize_out, square_thickness-2*tipsize_pack_in, tipsize_out, layerheight, layers)
 g.abs_move(Z=5)
+
+
+#file- 6packaging_top
+g = G(
+        outfile = "/Users/SeanWei/Documents/Python/PrintCode/squarecell/squarecell_20mm_3mm_6packaging_top.txt",
+        header = "/Users/SeanWei/Documents/Python/PrintCode/header_batteryprinter.txt",
+        footer = "/Users/SeanWei/Documents/Python/PrintCode/footer_batteryprinter.txt",
+        aerotech_include = False,
+        direct_write = False,
+        print_lines = False, 
+        )
+
+#Code starts
+g.set_home(x=0,y=0,Z=0) #lower left corner, nozzle edge with substrate edge, absolute zero
+g.feed(printvel_pack)
+g.abs_move(x=offset_pack_in, y=offset_pack_in)
+g.abs_move(Z=2*layers*layerheight+layerheight_sep+layerheight_seal)
+pressure_set(port, press_pack)
+pressure_on()        
+
+g.rect(square_edge-2*square_thickness+tipsize_pack_in, square_edge-2*square_thickness+tipsize_pack_in)
+       
+pressure_off()
+g.dwell(3.0)
+
+g.abs_move(Z=5)
+                
+g.abs_move(x=offset_pack_out, y=offset_pack_out)
+g.abs_move(Z=2*layers*layerheight+layerheight_sep+layerheight_seal)
+pressure_set(port, press_pack)
+pressure_on()
+        
+g.rect(square_edge-tipsize_pack_in, square_edge-tipsize_pack_in)
+        
+pressure_off()
+g.dwell(3.0)
+   
+g.abs_move(Z=5)
+
        
                
 #To end
