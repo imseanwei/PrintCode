@@ -33,8 +33,8 @@ printvel_sep = 100
 
 tipsize_in = 1.54	#tipsize for electrodes, separator; mm
 tipsize_out = 1.83	#tipsize for electrodes, separator; mm
-tipsize_pack_in = 0.51 #tipsize for packaging; mm
-tipsize_pack_out = 0.82 #tipsize for packaging; mm
+tipsize_pack_in = 0.20 #tipsize for packaging; mm
+tipsize_pack_out = 0.42 #tipsize for packaging; mm
 
 square_edge = 20 #outer edge length in mm
 square_thickness = 3 #outer edge to inner edge width in mm
@@ -53,7 +53,7 @@ layerheight_seal = 0.1
 
 port = 1
 press = 30
-press_pack = 30
+press_pack = 70
 press_sep = 30
 
 number_x= 1
@@ -84,16 +84,16 @@ def square_3D (path_length, path_width, nozzle_size, z_step, layers): #starts lo
             pressure_on()
             
             for i in range (step_number-1):
-                g.move(x=path_length-i*2*step_size)
-                g.move(y=path_length-i*2*step_size)
-                g.move(x=-(path_length-i*2*step_size))
-                g.move(y=-(path_length-i*2*step_size))
+                g.move(x=path_length-nozzle_size-i*2*step_size)
+                g.move(y=path_length-nozzle_size-i*2*step_size)
+                g.move(x=-(path_length-nozzle_size-i*2*step_size))
+                g.move(y=-(path_length-nozzle_size-i*2*step_size))
                 g.move(x=step_size, y=step_size) 
                 
-            g.move(x=path_length-step_number*2*step_size)
-            g.move(y=path_length-step_number*2*step_size)
-            g.move(x=-(path_length-step_number*2*step_size))
-            g.move(y=-(path_length-step_number*2*step_size))
+            g.move(x=path_length-nozzle_size-(step_number-1)*2*step_size)
+            g.move(y=path_length-nozzle_size-(step_number-1)*2*step_size)
+            g.move(x=-(path_length-nozzle_size-(step_number-1)*2*step_size))
+            g.move(y=-(path_length-nozzle_size-(step_number-1)*2*step_size))
             
             pressure_off()
             g.dwell(3)
@@ -157,7 +157,7 @@ g.abs_move(x=tipsize_pack_in+tipsize_out, y=tipsize_pack_in+tipsize_out)
 g.abs_move(Z=0)
 g.feed(printvel)
 pressure_set(port, press)       
-square_3D (square_edge-2*tipsize_pack_in-tipsize_out, square_thickness-2*tipsize_pack_in, tipsize_out, layerheight, layers)
+square_3D (square_edge-2*tipsize_pack_in, square_thickness-2*tipsize_pack_in, tipsize_out, layerheight, layers)
 g.abs_move(Z=5)
         
 
@@ -177,7 +177,7 @@ g.abs_move(x=tipsize_pack_in+tipsize_out, y=tipsize_pack_in+tipsize_out)
 g.abs_move(Z=layers*layerheight+layerheight_sep)
 g.feed(printvel_sep)
 pressure_set(port, press)       
-square_3D (square_edge-2*tipsize_pack_in-tipsize_out, square_thickness-2*tipsize_pack_in, tipsize_out, layerheight_sep, 1)
+square_3D (square_edge-2*tipsize_pack_in, square_thickness-2*tipsize_pack_in, tipsize_out, layerheight_sep, 1)
 g.abs_move(Z=5)       
 
 #file- 4packaging_top
@@ -238,13 +238,13 @@ g.abs_move(x=tipsize_pack_in+tipsize_out, y=tipsize_pack_in+tipsize_out)
 g.abs_move(Z=2*layers*layerheight+layerheight_sep)
 g.feed(printvel)
 pressure_set(port, press)       
-square_3D (square_edge-2*tipsize_pack_in-tipsize_out, square_thickness-2*tipsize_pack_in, tipsize_out, layerheight, layers)
+square_3D (square_edge-2*tipsize_pack_in, square_thickness-2*tipsize_pack_in, tipsize_out, layerheight, layers)
 g.abs_move(Z=5)
 
 
-#file- 6packaging_top
+#file- 6seal
 g = G(
-        outfile = "/Users/SeanWei/Documents/Python/PrintCode/squarecell/squarecell_20mm_3mm_6packaging_top.txt",
+        outfile = "/Users/SeanWei/Documents/Python/PrintCode/squarecell/squarecell_20mm_3mm_6seal.txt",
         header = "/Users/SeanWei/Documents/Python/PrintCode/header_batteryprinter.txt",
         footer = "/Users/SeanWei/Documents/Python/PrintCode/footer_batteryprinter.txt",
         aerotech_include = False,
