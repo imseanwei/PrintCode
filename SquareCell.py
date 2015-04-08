@@ -45,7 +45,8 @@ offset_pack_out = -(tipsize_pack_out-tipsize_pack_in)/2 #lower left corner
 layers = 1    #layers for electrodes, separator; mm
 layerheight =  0.5  #stepheight; mm  
 layerheight_sep = 0.05
-layers_pack_1 = int((layers*layerheight)/tipsize_pack_in)+1
+#layers_pack_1 = int((layers*layerheight)/tipsize_pack_in)+1
+layers_pack_1 = (int((layers*layerheight)/tipsize_pack_in)+1)*2
 layerheight_pack_1 = (layers*layerheight)/layers_pack_1
 layers_pack_2 = int((layers*layerheight+layerheight_sep)/tipsize_pack_in)+1
 layerheight_pack_2 = (layers*layerheight+layerheight_sep)/layers_pack_2
@@ -53,7 +54,7 @@ layerheight_seal = 0.1
 
 port = 1
 press = 30
-press_pack = 70
+press_pack = 20
 press_sep = 30
 
 number_x= 1
