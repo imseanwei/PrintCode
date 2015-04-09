@@ -102,7 +102,7 @@ def square_3D (path_length, path_width, nozzle_size, z_step, layers): #starts lo
   
 #file- 1packaging
 g = G(
-        outfile = "/Users/SeanWei/Documents/Python/PrintCode/squarecell/squarecell_20mm_3mm_1packaging_bottom.txt",
+        outfile = "/Users/SeanWei/Documents/Python/PrintCode/squarecell/squarecell_20mm_3mm_1packaging.txt",
         header = "/Users/SeanWei/Documents/Python/PrintCode/header_batteryprinter.txt",
         footer = "/Users/SeanWei/Documents/Python/PrintCode/footer_batteryprinter.txt",
         aerotech_include = False,
@@ -185,7 +185,7 @@ g.abs_move(Z=5)
 
 #file - 4anode
 g = G(
-        outfile = "/Users/SeanWei/Documents/Python/PrintCode/squarecell/squarecell_20mm_3mm_5anode.txt",
+        outfile = "/Users/SeanWei/Documents/Python/PrintCode/squarecell/squarecell_20mm_3mm_4anode.txt",
         header = "/Users/SeanWei/Documents/Python/PrintCode/header_batteryprinter.txt",
         footer = "/Users/SeanWei/Documents/Python/PrintCode/footer_batteryprinter.txt",
         aerotech_include = False,
@@ -206,7 +206,7 @@ g.abs_move(Z=5)
 
 #file- 5seal
 g = G(
-        outfile = "/Users/SeanWei/Documents/Python/PrintCode/squarecell/squarecell_20mm_3mm_6seal.txt",
+        outfile = "/Users/SeanWei/Documents/Python/PrintCode/squarecell/squarecell_20mm_3mm_5seal.txt",
         header = "/Users/SeanWei/Documents/Python/PrintCode/header_batteryprinter.txt",
         footer = "/Users/SeanWei/Documents/Python/PrintCode/footer_batteryprinter.txt",
         aerotech_include = False,
