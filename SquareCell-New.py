@@ -119,7 +119,7 @@ pressure_set(port, press_pack)
 pressure_on()
         
 for i in range(layers_pack):
-    g.rect(square_edge-2*square_thickness+tipsize_pack_in, square_edge-2*square_thickness+tipsize_pack_in)
+    g.rect(square_edge-2*square_thickness+tipsize_pack_in, square_edge-2*square_thickness+tipsize_pack_in, direction='CCW', start='LL')
     g.move(Z=layerheight_pack)
         
 pressure_off()
@@ -133,7 +133,7 @@ pressure_set(port, press_pack)
 pressure_on()
         
 for i in range(layers_pack):
-    g.rect(square_edge-tipsize_pack_in, square_edge-tipsize_pack_in)
+    g.rect(square_edge-tipsize_pack_in, square_edge-tipsize_pack_in, direction='CCW', start='LL')
     g.move(Z=layerheight_pack)
         
 pressure_off()
@@ -223,7 +223,7 @@ g.abs_move(Z=2*layers*layerheight+layerheight_sep+layerheight_seal)
 pressure_set(port, press_pack)
 pressure_on()        
 
-g.rect(square_edge-2*square_thickness+tipsize_pack_in, square_edge-2*square_thickness+tipsize_pack_in)
+g.rect(square_edge-2*square_thickness+tipsize_pack_in, square_edge-2*square_thickness+tipsize_pack_in, direction='CCW', start='LL')
        
 pressure_off()
 g.dwell(3.0)
@@ -235,7 +235,7 @@ g.abs_move(Z=2*layers*layerheight+layerheight_sep+layerheight_seal)
 pressure_set(port, press_pack)
 pressure_on()
         
-g.rect(square_edge-tipsize_pack_in, square_edge-tipsize_pack_in)
+g.rect(square_edge-tipsize_pack_in, square_edge-tipsize_pack_in, direction='CCW', start='LL')
         
 pressure_off()
 g.dwell(3.0)
