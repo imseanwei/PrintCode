@@ -1,0 +1,10 @@
+DVAR $hFile
+DVAR $cCheck
+DVAR $press
+DVAR $length
+DVAR $lame
+DVAR $comport
+
+
+G65 F2000; accel speed mm/s^2
+G66 F2000;accel speed mm/s^2
